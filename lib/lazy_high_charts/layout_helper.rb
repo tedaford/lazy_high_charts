@@ -112,7 +112,12 @@ module LazyHighCharts
       if defined?(javascript_tag)
         javascript_tag js_output, nonce: true
       else
-        "<script type='text/javascript'>#{js_output}</script>"
+        nonce = respond_to?(:content_security_policy_nonce) ? content_security_policy_nonce : nil
+        if nonce
+          "<script type='text/javascript' nonce='#{nonce}'>#{js_output}</script>"
+        else
+          "<script type='text/javascript'>#{js_output}</script>"
+        end
       end
     end
 
